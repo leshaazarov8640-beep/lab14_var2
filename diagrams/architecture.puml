@@ -1,0 +1,20 @@
+@startuml
+title Weather Data Pipeline Architecture
+
+component "Go Collector" as GO #LightBlue
+component "JSON Storage" as JSON #LightYellow
+component "Polars" as POLARS #LightGreen
+component "Parquet" as PARQUET #LightCoral
+component "DuckDB" as DUCKDB #LightGoldenRod
+component "Plotly" as PLOTLY #LightCyan
+
+GO --> JSON : "Write JSON lines"
+JSON --> POLARS : "Read & DataFrame"
+POLARS --> PARQUET : "Export (zstd)"
+PARQUET --> DUCKDB : "SQL Analysis"
+POLARS --> PLOTLY : "Visualization"
+
+note right of GO: Goroutines\nBuffered channel\nGraceful shutdown
+note right of POLARS: Clean, deduplicate\nType cast
+note right of DUCKDB: Window functions\nPerformance comparison
+@enduml
