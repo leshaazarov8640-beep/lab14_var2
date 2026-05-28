@@ -1,0 +1,20 @@
+services:
+  collector:
+    build:
+      context: .
+      dockerfile: Dockerfile.go
+    environment:
+      - OWM_API_KEY=${OWM_API_KEY}
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  analysis:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    depends_on:
+      - collector
+    volumes:
+      - ./data:/app/data
+      - ./docs:/app/analysis/docs
